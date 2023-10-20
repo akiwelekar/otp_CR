@@ -1,3 +1,4 @@
+"""Module providing a function otp generation function."""
 import smtplib
 import random
 import string
@@ -5,19 +6,21 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Email configuration
-sender_email = "akiwelekar@gmail.com"
-sender_password = "pxue ssll qagm chhu"
-recipient_email = "awk@dbatu.ac.in"
-LENGTH = 6
+SENDER_EMAIL = "akiwelekar@gmail.com"
+SENDER_PASSWORD = "pxue ssll qagm chhu"
+RECEIVER = "awk@dbatu.ac.in"
 
-# Generate a random 6-digit OTP
-def generate_otp(LENGTH):
-    return ''.join(random.choice(string.digits) for _ in range(LENGTH))
 
-def semd_otp_mail(sender, sender_password, receiver, otp):
-    # Create the email content
+
+
+def generate_otp(l):
+    """Generate a random 6-digit OTP."""
+    return ''.join(random.choice(string.digits) for _ in range(l))
+
+def send_otp_mail(pwd):
+    """Generate a random 6-digit OTP."""
     subject = "Your OTP Code"
-    message = f"Your OTP code is: {otp}"
+    message = f"Your OTP code is: {pwd}"
 
     # Setup the email server
     smtp_server = "smtp.gmail.com"
@@ -26,23 +29,23 @@ def semd_otp_mail(sender, sender_password, receiver, otp):
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
-        server.login(sender, sender_password)
+        server.login(SENDER_EMAIL, SENDER_PASSWORD)
 
         # Create and send the email
         msg = MIMEMultipart()
-        msg['From'] = sender_email
-        msg['To'] = receiver
+        msg['From'] = SENDER_EMAIL
+        msg['To'] = RECEIVER
         msg['Subject'] = subject
         msg.attach(MIMEText(message, 'plain'))
 
-        server.sendmail(sender, receiver, msg.as_string())
+        server.sendmail(SENDER_EMAIL, RECEIVER, msg.as_string())
         server.quit()
 
-        print(f"OTP sent to {receiver}")
+        print(f"OTP sent to {RECEIVER}")
 
     except smtplib.SMTPException as e:
         print(f"An error occurred: {e}")
 
 # Generate OTP
-otp = generate_otp(LENGTH)
-semd_otp_mail(sender_email,sender_password, recipient_email, otp)
+
+send_otp_mail( generate_otp(6))
